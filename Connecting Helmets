@@ -1,0 +1,59 @@
+import pgzrun
+from random import randint
+from time import time
+
+WIDTH = 800
+HEIGHT = 600
+
+Helmet = []
+Lines = []
+Next_Helmet = 0
+
+Start_Time = 0
+Total_Time = 0
+End_Time = 0
+
+Number_Of_Helmets = 8
+
+def create_helmet():
+    global Start_Time
+    for count in range (0,Number_Of_Helmets):
+        cap = Actor("Sprite(1)")
+        cap.pos = randint(40,WIDTH - 40), randint(40,HEIGHT - 40)
+        Helmet.append(cap)
+    Start_Time = time()
+
+def draw():
+    global Total_Time
+    screen.blit("space",(0,0))
+    Number = 1
+    for cap in Helmet:
+        screen.draw.text(str(Number),(cap.pos[0],cap.pos[1]+20))
+        cap.draw()
+        Number = Number + 1
+    for Line in Lines:
+        screen.draw.line(Line[0],Line[1],[255,255,255])
+        if Next_Helmet<Number_Of_Helmets:
+            Total_Time = time() - Start_Time
+            screen.draw.text(str(round(Total_Time,1)),(10,10), fontsize=30)
+        else:
+            screen.draw.text(str(round(Total_Time,1)),(10,10), fontsize=30)
+
+def update():
+    pass
+
+def on_mouse_down():
+    global Next_Helmet,Lines
+    if Next_Helmet < Number_Of_Helmets:
+        if Helmet[Next_Helmet].collidepoint(pos):
+            if Next_Helmet:
+                Lines.append((Helmet[Next_Helmet-1].pos, Helmet[Next_Helmet].pos))
+                Next_Helmet = Next_Helmet + 1
+            else:
+                Lines = []
+                Next_Helmet = 0
+
+create_helmet
+
+
+pgzrun.go()
